@@ -13,8 +13,6 @@ The ultimate goal of this project is to contribute to the development of robotic
 6. [Installation](#installation)
 7. [Usage](#usage)
 8. [Future Work](#future-work)
-9. [Contributing](#contributing)
-10. [License](#license)
 
 ## Background
 "Social wayfinding" refers to how people navigate around others in crowded spaces, taking into account the presence and motion of others to reach a goal. This project explores how humans navigate in a crowd, with potential applications in robotics and autonomous systems where robots need to interact smoothly with humans.
@@ -50,10 +48,71 @@ The code is implemented in Python using TensorFlow and Keras for model building 
 - Keras
 - NumPy
 - Pandas
-- Matplotlib (for visualization)
+- Plotly (for visualization)
+
+## Installation
+1. **Clone this repository**:
+   ```bash
+   git clone https://github.com/VashishtBorkar/LSTM-Path-Predictor.git
+   ```
+2. **Navigate to the project directory**:
+   ```bash
+   cd Path\ Predictor
+   ```
+3. **Install dependencies**:
+   Create a virtual environment (recommended) and install dependencies from `requirements.txt`:
+     ```bash
+     python3 -m venv venv
+     source venv/bin/activate  # For Linux/Mac
+     venv\Scripts\activate     # For Windows
+     pip install -r requirements.txt
+     ```
+
+## Usage
+### 1. Data Processing
+To load and preprocess the data, use functions from `data_processing.py`. The example below demonstrates loading a dataset and preprocessing it:
+
+```python
+from data_processing import load_data, preprocess_data, create_list_of_sequences, create_training_split
+
+data = load_data('path/to/data.csv')
+
+# Raw data in a multidimensional array [participant, trial, frames, features]
+processed_data = preprocess_data(data)
+
+# List of sequences for use by LSTM
+feature_sequences, label_sequences = create_list_of_sequences(processed_data)
+x_train, x_test, y_train, y_test = create_training_split(feature_sequences, label_sequences, test_size=0.2)
+
+```
+
+### 2. Model Training
+To define and train the model, use `model.py`. This example shows how to create an instance of the model with a defined input shape:
+
+```python
+from model import create_model
+
+sequence_length = 25 # Used for LSTM
+num_features = len(processed_data[0][0])-2 # Number of features as input for LSTM
+model = create_model(sequence_length, num_features)
+```
+
+You can now proceed with training the model in a separate script or interactively in your Jupyter notebook.
+
+### 3. Plotting and Evaluation
+To visualize the results or metrics, you can use `graphing.py`:
+
+```python
+from graphing import graph_trial
+
+# Plots the actual vs predicted values of a given trial
+plot_results(test_sequence, sequence_length)
+```
 
 ## Future Work
 Future developments include:
 - **Integration with Robotic Systems**: Applying this model to real-world robotic platforms for testing in actual crowded spaces.
 - **Feature Expansion**: Including additional contextual features like agent speeds and directionality.
 - **Model Optimization**: Experimenting with other architectures like Transformer-based models for improved prediction accuracy.
+
+---
